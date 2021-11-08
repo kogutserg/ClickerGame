@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class AchMenu : MonoBehaviour
 {
+    public int money;
     public int total_money;
     [SerializeField] Button firstAch;
     [SerializeField] bool isFirst;
@@ -16,6 +17,7 @@ public class AchMenu : MonoBehaviour
     }
     void Start()
     {
+        money = PlayerPrefs.GetInt("money");
         total_money = PlayerPrefs.GetInt("total_money");
         isFirst = PlayerPrefs.GetInt("isFirst") == 1 ? true : false;
         if (total_money >= 10 && !isFirst == false)
@@ -24,6 +26,7 @@ public class AchMenu : MonoBehaviour
         } else
         {
             firstAch.interactable = false;
+            StartCoroutine(IdleFarm());
         }
     }
 
@@ -34,6 +37,15 @@ public class AchMenu : MonoBehaviour
         PlayerPrefs.SetInt("money", money);
         isFirst = true;
         PlayerPrefs.SetInt("isFirst", isFirst ? 1 : 0);
+    }
+
+    IEnumerator IdleFarm()
+    {
+        yield return new WaitForSeconds(1);
+        money++;
+        Debug.Log(money);
+        PlayerPrefs.SetInt("money", money);
+        StartCoroutine(IdleFarm());
     }
 
     public void ToMenu()
